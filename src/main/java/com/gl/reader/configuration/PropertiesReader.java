@@ -22,21 +22,11 @@ public class PropertiesReader {
     @Value("${appdbName}")
     public String appdbName;
 
-
     @Value("${edrappdbName}")
     public String edrappdbName;
 
-    @Value("${repdbName}")
-    public String repdbName;
-
     @Value("${auddbName}")
     public String auddbName;
-
-    @Value("${oamdbName}")
-    public String oamdbName;
-
-    @Value("${spring.jpa.properties.hibernate.dialect}")
-    public String dialect;
 
     @Value("${COMMA-DELIMITER}")
     public String commaDelimiter;
@@ -59,14 +49,11 @@ public class PropertiesReader {
     @Value("${EXTENSION}")
     public String extension;
 
-    @Value("${INPUT-LOCATION}")
+    @Value("${INPUTPATH}")
     public String inputLocation;
 
-    @Value("${OUTPUT-LOCATION}")
+    @Value("${OUTPUTPATH}")
     public String outputLocation;
-
-//    @Value("${ERROR-REPORT-FLAG}")
-//    public String errorReportFlag;
 
     @Value("${ROW-COUNT-FOR-SPLIT}")
     public Integer rowCountForSplit;
@@ -85,9 +72,6 @@ public class PropertiesReader {
 
     @Value("#{'${ddMMyyyySource}'.split(',')}")
     public List<String> ddMMyyyySource;
-
-    @Value("${yyyyMMddSource}")
-    public String yyyyMMddSource;
 
     @Value("${ATTRIBUTE-SEPARATOR}")
     public String attributeSeperator;

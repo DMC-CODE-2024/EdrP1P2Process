@@ -78,7 +78,7 @@ public class ProcessController {
     public static String auddbName = null;
     public static Set<Book> errorFile = new HashSet<>();
     public static Set<Book> errorBlacklistFile = new HashSet<>();
-    public static Set<String> reportTypeSet = new HashSet<>();
+ //   public static Set<String> reportTypeSet = new HashSet<>();
     public static List<String> pattern = new ArrayList<>();
     public static HashMap<String, HashMap<String, Book>> BookHashMap = new HashMap<>();
     public static Clock offsetClock = Clock.offset(Clock.systemUTC(), Duration.ofHours(+7));
@@ -86,7 +86,7 @@ public class ProcessController {
     public static Integer day = currentdate.getDayOfMonth();
     public static Month month = currentdate.getMonth();
     public static Integer year = currentdate.getYear();
-    public static List<String> ims_sources = new ArrayList<String>();
+   // public static List<String> ims_sources = new ArrayList<String>();
     public static PropertiesReader propertiesReader = null;
     public static Map<String, String> imeiValCheckMap = new HashMap<String, String>();
     public static String procesStart_timeStamp = null;
@@ -119,7 +119,7 @@ public class ProcessController {
             outputLocation = propertiesReader.outputLocation.replace("{DATA_HOME}", System.getenv("DATA_HOME"));  //System.getenv("DATA_HOME")
             returnCount = sourceName.contains("all") ? propertiesReader.rowCountForSplit : 0;
             servername = propertiesReader.servername;
-            ims_sources = propertiesReader.imsSources;
+        //    ims_sources = propertiesReader.imsSources;
             attributeSplitor = sourceName.contains("all") ? propertiesReader.commaDelimiter : propertiesReader.attributeSeperator;
 
             imeiValCheckMap = imeiLengthValueCheck(conn);
@@ -129,12 +129,12 @@ public class ProcessController {
             if (!sourceName.contains("all")) {
                 file_patterns = getFilePatternByOperatorSource(conn, operatorName, sourceName);
             }
-            if (!(ims_sources.contains(sourceName))) { // "sm_ims".equals(folderName)
-                reportTypeSet.addAll(propertiesReader.reportType);
-                if (reportTypeSet.contains("null")) {
-                    reportTypeSet = new HashSet<>();
-                }
-            }
+//            if (!(ims_sources.contains(sourceName))) { // "sm_ims".equals(folderName)
+//                reportTypeSet.addAll(propertiesReader.reportType);
+//                if (reportTypeSet.contains("null")) {
+//                    reportTypeSet = new HashSet<>();
+//                }
+//            }
 
             checkFilePresence();
 
@@ -171,12 +171,12 @@ public class ProcessController {
                             logger.debug("File Move to Error Folder  FileName: " + file.getName() + ", Date: " + DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")
                                     + ", Start Time: " + startTime + ", End Time: " + Instant.now(offsetClock) + ", Time Taken: , Operator Name: " + operatorName + ", Source Name: " + sourceName + ", TPS: " + Tps + ", Error::: "
                                     + ",iBlackListerror:" + iBlackListerror + ",,i error:" + ierror + ", inSet: " + iinSet + ", totalCount: " + itotalCount + ", duplicate: " + iduplicate + ", volume: " + inputOffset + ", tag: " + tag + ", EventTime Tag  is null");
-                            Path pathFolder = Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + year + "/" + month + "/" + day);
+                            Path pathFolder = Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/");
                             if (!Files.exists(pathFolder)) {
                                 Files.createDirectories(pathFolder);
                             }
                             Files.move(Paths.get(inputLocation + "/" + operatorName + "/" + sourceName + "/" + file.getName()),
-                                    Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + year + "/" + month + "/" + day + "/" + file.getName()));
+                                    Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" +  file.getName()));
                             FilePreProcessing.insertReportv2("I", file.getName(), itotalCount, ierror, iduplicate, iinSet,
                                     startTime1.toString(), Instant.now(offsetClock).toString(), 0.0f, Tps, operatorName, sourceName, inputOffset, tag, 1, headCount, servername, iBlackListerror);
                             processed++;
@@ -258,7 +258,7 @@ public class ProcessController {
                 }
                 logger.info("End Loop-- " + "Processed- : " + processed + "Value- : " + filRetriver);
                 if (processed >= filRetriver) {  //processed <= value
-                    logger.info("Final Processed   !!!CHECKED its working");
+                    logger.info("Final Processed ");  // !!! CHECKED . its working
                     makeCsv(outputLocation, operatorName, sourceName, fileName, returnCount);
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                     LocalDateTime now = LocalDateTime.now();

@@ -34,9 +34,14 @@ public class CsvCreater {
 
     public static void makeErrorCsv(String outputLocation, String sourceName, String folderName, String fileName, Set<Book> errorFile) {
         FileWriter fileWriter = null;
-        String errorPathTillCurrent = outputLocation + "/" + sourceName + "/" + folderName + "/error/" + year + "/" + month + "/" + day + "/";
+        String errorPathTillCurrent = outputLocation + "/" + sourceName + "/" + folderName + "/error/" ;  //+ year + "/" + month + "/" + day + "/"
 
         try {
+            if (errorFile.isEmpty()) {
+                logger.info("No record found,So no need to create Error File!!!" + errorFile.size());
+                return ;
+            }
+
             // rename file
             createAndRenameFileIfExists(errorPathTillCurrent, fileName);
             if (!errorFile.isEmpty()) {// optimise to not create folder
@@ -83,7 +88,7 @@ public class CsvCreater {
     public static void makeBlacklistErrorCsv(String outputLocation, String sourceName, String folderName, String fileName, Set<Book> errorBlacklistFile) {
         FileWriter fileWriter = null;
         fileName= "BlackListed_"+fileName;
-        String errorPathTillCurrent = outputLocation + "/" + sourceName + "/" + folderName + "/error/" + year + "/" + month + "/" + day + "/";
+        String errorPathTillCurrent = outputLocation + "/" + sourceName + "/" + folderName + "/error/"  ;
 
         try {
             // rename file

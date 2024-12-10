@@ -25,8 +25,8 @@ public class FilePreProcessing {
             }
             String dateFunc = defaultStringtoDate(procesStart_timeStamp);
             String sql = "Insert into " + edrappdbName
-                    + ".cdr_file_pre_processing_detail(CREATED_ON,MODIFIED_ON,FILE_TYPE,TOTAL_RECORDS,TOTAL_ERROR_RECORDS,TOTAL_DUPLICATE_RECORDS,TOTAL_OUTPUT_RECORDS,FILE_NAME,START_TIME,END_TIME,TIME_TAKEN,TPS,OPERATOR_NAME,SOURCE_NAME,VOLUME,TAG,FILE_COUNT , HEAD_COUNT ,servername, total_blacklist_record )"
-                    + "values(" + dateFunc + " , CURRENT_TIMESTAMP , '" + fileType + "'," + totalRecords + "," + totalErrorRecords + ","
+                    + ".cdr_file_pre_processing_detail(FILE_TYPE,TOTAL_RECORD,TOTAL_ERROR_RECORD,TOTAL_DUPLICATE_RECORD,TOTAL_OUTPUT_RECORD,FILE_NAME,START_TIME,END_TIME,TIME_TAKEN,TPS,OPERATOR_NAME,SOURCE_NAME,VOLUME,TAG,FILE_COUNT , HEAD_COUNT ,servername, total_blacklist_record )"
+                    + "values(   '" + fileType + "'," + totalRecords + "," + totalErrorRecords + ","
                     + totalDuplicateRecords + "," + totalOutputRecords + ",'" + fileName + "'," + defaultStringtoDate(startTime) + ","
                     + defaultStringtoDate(endTime) + "," + timeTaken + "," + tps + ",'" + operatorName + "','" + sourceName + "'," + volume
                     + ",'" + tag + "'," + FileCount + "  ," + headCount + " , '" + servername + "' , '" + totalBlackListedError + "'        )";
@@ -46,16 +46,7 @@ public class FilePreProcessing {
         }
     }
 
-    public static String defaultDateNow(boolean isOracle) {
-        if (isOracle) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String val = sdf.format(new Date());
-            return "TO_DATE('" + val + "','YYYY-MM-DD HH24:MI:SS')"; // commented by sharad
 
-        } else {
-            return "now()";
-        }
-    }
 
 
 }

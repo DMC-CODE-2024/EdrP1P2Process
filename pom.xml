@@ -56,7 +56,7 @@
     </dependencies>
 
     <build>
-        <finalName>etl_edr_p1_p2</finalName>
+        <finalName>etl_edr_p1_p2_1.0.0</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

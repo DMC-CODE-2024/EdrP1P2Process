@@ -59,17 +59,17 @@ public class FileReaderService {
 
 
     public static void moveFileToError(String fileName) throws IOException {
-        Path pathFile = Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + year + "/" + month + "/" + day + "/errorFile");
+        Path pathFile = Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" );
         if (!Files.exists(pathFile)) {
             Files.createDirectories(pathFile);
             logger.info("Directory created");
         }
         // rename file
-        if (Files.exists(Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + year + "/" + month + "/" + day + "/errorFile/" + fileName))) {
+        if (Files.exists(Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + fileName))) {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            File sourceFile = new File(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + year + "/" + month + "/" + day + "/errorFile/" + fileName);
+            File sourceFile = new File(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + fileName);
             String newName = fileName + "-" + sdf.format(timestamp);
-            File destFile = new File(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + year + "/" + month + "/" + day + "/errorFile/" + newName);
+            File destFile = new File(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + newName);
             if (sourceFile.renameTo(destFile)) {
                 logger.info("File renamed successfully");
             } else {
@@ -80,7 +80,7 @@ public class FileReaderService {
         Path temp = null;
         try {
             temp = Files.move(Paths.get(inputLocation + "/" + operatorName + "/" + sourceName + "/" + fileName),
-                    Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + year + "/" + month + "/" + day + "/errorFile/" + fileName));
+                    Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + fileName));
         } catch (Exception e) {
             logger.warn(" File   " + fileName + " Not able to move ");
         }
