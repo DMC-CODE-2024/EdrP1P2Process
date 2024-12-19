@@ -45,15 +45,11 @@ public class ModulesAudit {
     }
 
     public static void updateModuleAudit(Connection conn, int statusCode, String status, String errorMessage, int id, long executionStartTime, long numberOfRecord, long totalFileCount) {
-        String exec_time = " TIMEDIFF(now() ,created_on) ";
-        if (conn.toString().contains("oracle")) {
-            long milliseconds = (new Date().getTime()) - executionStartTime;
-            String executionFinishTiime = (((milliseconds / 1000) / 60) / 60) + ":" + (((milliseconds / 1000) / 60) % 60) + ":" + ((milliseconds / 1000) % 60);
-            exec_time = " '" + executionFinishTiime + "' ";
-        }
+         long milliseconds = (new Date().getTime()) - executionStartTime;
+       
         try (Statement stmt = conn.createStatement()) {
             String query = "update   " + auddbName + ".modules_audit_trail set status_code='" + statusCode + "',status='" + status + "',error_message='" + errorMessage + "', count='" + totalFileCount  + "',"
-                    + "action='insert', execution_time = " + exec_time + "  ,  modified_on = CURRENT_TIMESTAMP , failure_count='0' , count2='" + numberOfRecord + "'     where  id = " + id;
+                    + "action='insert', execution_time = " + (milliseconds/1000) + "  ,  modified_on = CURRENT_TIMESTAMP , failure_count='0' , count2='" + numberOfRecord + "'     where  id = " + id;
             logger.info(query);
             stmt.executeUpdate(query);
         } catch (Exception e) {
