@@ -53,7 +53,7 @@ public class PropertiesReader {
     public String inputLocation;
 
     @Value("${OUTPUTPATH}")
-    public String outputLocation;
+    public String outputPath;
 
     @Value("${ROW-COUNT-FOR-SPLIT}")
     public Integer rowCountForSplit;
@@ -75,4 +75,11 @@ public class PropertiesReader {
 
     @Value("${ATTRIBUTE-SEPARATOR}")
     public String attributeSeperator;
+
+    @Value("${ERRORPATH}")
+    public String errorPath;
+    @Value("${PROCESSEDPATH}")
+    public String  processedPath;
+    @Value("${eirs.alert.url}")
+    public String  alertUrl;
 }

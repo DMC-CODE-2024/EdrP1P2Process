@@ -1,7 +1,6 @@
 package com.gl.reader.dto;
 
-import com.gl.reader.constants.Alerts;
-import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
@@ -12,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.gl.reader.configuration.AlertService.raiseAlert;
 import static com.gl.reader.service.ProcessController.appdbName;
 
 
@@ -29,7 +29,7 @@ public class SysParam {
             }
         } catch (Exception e) {
             logger.error("Not able to access details from sys_param " + e);
-            Alert.raiseAlert(Alerts.ALERT_006, Map.of("<e>", "not able to  access details from sys_param " + e.toString() + ". in   ", "<process_name>", "EDR_pre_processor"), 0);
+            raiseAlert("alert006", e.toString());
             System.exit(0);
         }
         return ImeiCheckMap;
@@ -48,7 +48,7 @@ public class SysParam {
             return Arrays.asList(response.split(","));
         } catch (Exception e) {
             logger.error("Not able to access details from sys_param " + e);
-            Alert.raiseAlert(Alerts.ALERT_006, Map.of("<e>", "file pattern not access " + e.toString() + ". in   ", "<process_name>", "EDR_pre_processor"), 0);
+            raiseAlert("alert006", e.toString());
             System.exit(0);
         }
         return null;

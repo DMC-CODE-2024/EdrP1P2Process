@@ -1,8 +1,5 @@
 package com.gl.reader.service.impl;
 
-
-import com.gl.reader.constants.Alerts;
-import com.gl.reader.dto.Alert;
 import com.gl.reader.model.Book;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static com.gl.reader.configuration.AlertService.raiseAlert;
 import static com.gl.reader.service.ProcessController.BookHashMap;
 import static com.gl.reader.service.ProcessController.propertiesReader;
 
@@ -34,7 +32,7 @@ public class CsvCreater {
 
     public static void makeErrorCsv(String outputLocation, String sourceName, String folderName, String fileName, Set<Book> errorFile) {
         FileWriter fileWriter = null;
-        String errorPathTillCurrent = outputLocation + "/" + sourceName + "/" + folderName + "/error/" ;  //+ year + "/" + month + "/" + day + "/"
+        String errorPathTillCurrent = outputLocation + "/" + sourceName + "/" + folderName + "/" ;  //+ year + "/" + month + "/" + day + "/"
 
         try {
             if (errorFile.isEmpty()) {
@@ -80,15 +78,14 @@ public class CsvCreater {
 
         } catch (Exception e) {
             logger.info("Error in CsvFileWriter for Error File!!!" + e);
-            Alert.raiseAlert(Alerts.ALERT_006, Map.of("<e>", e.toString() + " Not able to crete error CSV  ", "<process_name>", "EDR_pre_processor"), 0);
-        }
+            raiseAlert("alert006", e.toString());}
     }
 
 
     public static void makeBlacklistErrorCsv(String outputLocation, String sourceName, String folderName, String fileName, Set<Book> errorBlacklistFile) {
         FileWriter fileWriter = null;
         fileName= "BlackListed_"+fileName;
-        String errorPathTillCurrent = outputLocation + "/" + sourceName + "/" + folderName + "/error/"  ;
+        String errorPathTillCurrent = outputLocation + "/" + sourceName + "/" + folderName + "/"  ;
 
         try {
             // rename file
@@ -128,8 +125,7 @@ public class CsvCreater {
 
         } catch (Exception e) {
             logger.info("Error in CsvFileWriter for errorBlacklistFile File!!!" + e);
-            Alert.raiseAlert(Alerts.ALERT_006, Map.of("<e>", e.toString() + " Not able to crete Error BlacklistFile  CSV  ", "<process_name>", "EDR_pre_processor"), 0);
-        }
+            raiseAlert("alert006", e.toString()); }
     }
 
 
@@ -161,11 +157,11 @@ public class CsvCreater {
         FileWriter fileWriter = null;
         int i = 1;
         try {
-            createAndRenameFileIfExists(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/", fileName);
+            createAndRenameFileIfExists(outputLocation + "/" + sourceName + "/" + folderName + "/" + "", fileName);
 
             if (returnCount == 0) {
                 logger.debug("inside non split block");
-                fileWriter = new FileWriter(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/" + fileName);
+                fileWriter = new FileWriter(outputLocation + "/" + sourceName + "/" + folderName + "/" + "" + fileName);
                 fileWriter.append(propertiesReader.fileHeader);
                 fileWriter.append(propertiesReader.newLineSeprator);
                 for (HashMap.Entry<String, HashMap<String, Book>> csvf : BookHashMap.entrySet()) {
@@ -198,7 +194,7 @@ public class CsvCreater {
             } else {
                 logger.debug("inside split block");
                 int count = 0;
-                fileWriter = new FileWriter(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/" + fileName);
+                fileWriter = new FileWriter(outputLocation + "/" + sourceName + "/" + folderName + "/" + "" + fileName);
                 fileWriter.append(propertiesReader.fileHeader);
                 fileWriter.append(propertiesReader.newLineSeprator);
 
@@ -230,11 +226,12 @@ public class CsvCreater {
                             fileWriter.flush();
                         } else {
                             // logger.info("count greater than split count: " + count);
-                            if (Files.exists(Paths.get(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/" + fileName))) {
-                                File sourceFile = new File(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/" + fileName);
-                                String newName = fileName + "_00" + i;
+                            if (Files.exists(Paths.get(outputLocation + "/" + sourceName + "/" + folderName + "/" + "" + fileName))) {
+                                File sourceFile = new File(outputLocation + "/" + sourceName + "/" + folderName + "/" + "" + fileName);
+                                String a=  String.format("%03d", i);
+                                String newName = fileName + "_" + a;
                                 i++;
-                                File destFile = new File(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/" + newName);
+                                File destFile = new File(outputLocation + "/" + sourceName + "/" + folderName + "/" + "" + newName);
                                 if (sourceFile.renameTo(destFile)) {
                                     logger.info("File split successfully: " + newName);
                                 } else {
@@ -242,7 +239,7 @@ public class CsvCreater {
                                 }
                             }
                             count = 0;
-                            fileWriter = new FileWriter(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/" + fileName);
+                            fileWriter = new FileWriter(outputLocation + "/" + sourceName + "/" + folderName + "/" + "" + fileName);
                             fileWriter.append(propertiesReader.fileHeader);
                             fileWriter.append(propertiesReader.newLineSeprator);
                             fileWriter.append(String.valueOf(csvf3.getValue().getIMEI()));
@@ -268,10 +265,12 @@ public class CsvCreater {
                         }
                     }
                 }
-                if (Files.exists(Paths.get(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/" + fileName))) {
-                    File sourceFile = new File(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/" + fileName);
-                    String newName = fileName + "_00" + i++;
-                    File destFile = new File(outputLocation + "/" + sourceName + "/" + folderName + "/" + "output/" + newName);
+                if (Files.exists(Paths.get(outputLocation + "/" + sourceName + "/" + folderName + "/" + "" + fileName))) {
+                    File sourceFile = new File(outputLocation + "/" + sourceName + "/" + folderName + "/" + "" + fileName);
+                    String a=  String.format("%03d", i);
+                    String newName = fileName + "_" + a;
+                    i++;
+                    File destFile = new File(outputLocation + "/" + sourceName + "/" + folderName + "/" + "" + newName);
                     if (sourceFile.renameTo(destFile)) {
                         logger.info("File split successfully: " + newName);
                     } else {
@@ -288,8 +287,7 @@ public class CsvCreater {
             Map<String, String> placeholderMapForAlert = new HashMap<String, String>();
             placeholderMapForAlert.put("<e>", e.toString());
             placeholderMapForAlert.put("<process_name>", "EDR_pre_processor");
-            Alert.raiseAlert(Alerts.ALERT_006, placeholderMapForAlert, 0);
-            logger.error("Alert [ALERT_006] is raised. So, doing nothing." + e);
+            raiseAlert("alert006", e.toString()); logger.error("Alert [ALERT_006] is raised. So, doing nothing." + e);
         } finally {
             try {
                 fileWriter.flush();
@@ -299,8 +297,6 @@ public class CsvCreater {
                 Map<String, String> placeholderMapForAlert = new HashMap<String, String>();
                 placeholderMapForAlert.put("<e>", e.toString());
                 placeholderMapForAlert.put("<process_name>", "EDR_pre_processor");
-                Alert.raiseAlert(Alerts.ALERT_006, placeholderMapForAlert, 0);
-                logger.error("Alert [ALERT_006] is raised. So, doing nothing.");
             }
         }
     }

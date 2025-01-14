@@ -1,7 +1,6 @@
 package com.gl.reader.dto;
 
-import com.gl.reader.constants.Alerts;
-import org.apache.logging.log4j.LogManager;
+ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Statement;
@@ -9,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import static com.gl.reader.configuration.AlertService.raiseAlert;
 import static com.gl.reader.service.ProcessController.*;
 
 public class FilePreProcessing {
@@ -33,8 +33,8 @@ public class FilePreProcessing {
             logger.info("Inserting for FileTypes {} , SQL [{}]   :: ",fileType, sql);
             stmt.executeUpdate(sql);
         } catch (Exception e) {
-            Alert.raiseAlert(Alerts.ALERT_006, Map.of("<e>", "not able to insert in file_pre_processing_detail " + e.toString() + ". in   ", "<process_name>", "EDR_pre_processor"), 0);
-        }
+            raiseAlert("alert006", e.toString() );
+          }
     }
 
 

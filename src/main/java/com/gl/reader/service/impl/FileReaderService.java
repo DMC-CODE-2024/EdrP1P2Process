@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,17 +60,17 @@ public class FileReaderService {
 
 
     public static void moveFileToError(String fileName) throws IOException {
-        Path pathFile = Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" );
+        Path pathFile = Paths.get(errorPath + "/" + operatorName + "/" + sourceName + "/" );
         if (!Files.exists(pathFile)) {
             Files.createDirectories(pathFile);
             logger.info("Directory created");
         }
         // rename file
-        if (Files.exists(Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + fileName))) {
+        if (Files.exists(Paths.get(errorPath + "/" + operatorName + "/" + sourceName + "/" + fileName))) {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            File sourceFile = new File(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + fileName);
+            File sourceFile = new File(errorPath + "/" + operatorName + "/" + sourceName + "/" + fileName);
             String newName = fileName + "-" + sdf.format(timestamp);
-            File destFile = new File(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + newName);
+            File destFile = new File(errorPath + "/" + operatorName + "/" + sourceName + "/" + newName);
             if (sourceFile.renameTo(destFile)) {
                 logger.info("File renamed successfully");
             } else {
@@ -80,7 +81,7 @@ public class FileReaderService {
         Path temp = null;
         try {
             temp = Files.move(Paths.get(inputLocation + "/" + operatorName + "/" + sourceName + "/" + fileName),
-                    Paths.get(outputLocation + "/" + operatorName + "/" + sourceName + "/error/" + fileName));
+                    Paths.get(errorPath + "/" + operatorName + "/" + sourceName + "/" + fileName) , StandardCopyOption.REPLACE_EXISTING );
         } catch (Exception e) {
             logger.warn(" File   " + fileName + " Not able to move ");
         }

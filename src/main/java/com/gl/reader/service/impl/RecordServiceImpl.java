@@ -1,6 +1,6 @@
 package com.gl.reader.service.impl;
 
-import com.gl.reader.constants.Alerts;
+import com.gl.reader.configuration.AlertService;
 import com.gl.reader.model.Book;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.gl.reader.dto.Alert.raiseAlert;
 import static com.gl.reader.model.Book.createBook;
 import static com.gl.reader.service.ProcessController.*;
 
@@ -174,18 +173,8 @@ public class RecordServiceImpl {
             br.close();
         } catch (Exception e) {
             logger.error("Alert in  " + line + "Error: " + e + "in [" + Arrays.stream(e.getStackTrace()).filter(ste -> ste.getClassName().equals(RecordServiceImpl.class.getName())).collect(Collectors.toList()).get(0) + "]");
-            raiseAlert(Alerts.ALERT_006, Map.of("<e>", e.toString() + ". in file  " + file_name, "<process_name>", "EDR_pre_processor"), 0);
-            return false;
+            AlertService.raiseAlert("alert006", e.toString());  return false;
         }
         return true;
     }
 }
-
-//                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-//                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm:ss");
-//                try {
-//                    Date date = inputFormat.parse(dateString);
-//                    String time = outputFormat.format(date);
-//                  // new SimpleDateFormat("yyyy-MM-dd").parse(book.getTimeStamp())
-//                                 .compareTo(new SimpleDateFormat("yyyy-MM-dd").parse(oldBook.getTimeStamp())) > 0
-
